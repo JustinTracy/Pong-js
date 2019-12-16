@@ -19,11 +19,11 @@ function InitializeGame()
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
     context.fillStyle = 'white';
-    context.fillRect(xLocation, yLocation, ballSize, ballSize);
     context.font = '48px arial';
     context.fillText('0', 10, 50, 500, 500);
     context.fillText('0', canvasWidth - 40, 50, 500, 500);
     setInterval(gameLoop, 1000/30);
+    relocateBall();
 }
 
 function gameLoop()
@@ -32,31 +32,42 @@ function gameLoop()
     checkForPoint();
 }
 
+function relocateBall()
+{
+    context.clearRect(xLocation, yLocation, ballSize, ballSize);
+    xLocation = canvasWidth / 2;
+    yLocation = canvasHeight / 2;
+    if (Math.floor(Math.random(2) * 2) === 1) xSpeed = initialSpeed; else xSpeed = -initialSpeed;
+    if (Math.floor(Math.random(2) * 2) === 1) ySpeed = initialSpeed; else ySpeed = -initialSpeed;
+}
+
 function checkForPoint()
 {
     if (xLocation + ballSize >= canvasWidth)
     {
         player1Score++;
         context.clearRect(xLocation, yLocation, ballSize, ballSize);
-        xLocation = canvasWidth / 2;
-        yLocation = canvasHeight / 2;
-        if (Math.floor(Math.random(2) * 2) === 1) xSpeed = initialSpeed; else xSpeed = -initialSpeed;
-        if (Math.floor(Math.random(2) * 2) === 1) ySpeed = initialSpeed; else ySpeed = -initialSpeed;
         context.clearRect(0, 0, 1000, 100); 
         context.fillText(player1Score, 10, 50, 500, 500);
         context.fillText(player2Score, canvasWidth - 40, 50, 500, 500); 
+        xLocation = canvasWidth / 2 - ballSize;
+        yLocation = canvasHeight / 2 - ballSize;
+        xSpeed = 0;
+        ySpeed = 0;
+        setTimeout(relocateBall, 1000);
     } 
     if (xLocation <= 0)
     {
         player2Score++;
         context.clearRect(xLocation, yLocation, ballSize, ballSize);
-        xLocation = canvasWidth / 2;
-        yLocation = canvasHeight / 2;
-        if (Math.floor(Math.random(2) * 2) === 1) xSpeed = initialSpeed; else xSpeed = -initialSpeed;
-        if (Math.floor(Math.random(2) * 2) === 1) ySpeed = initialSpeed; else ySpeed = -initialSpeed;
         context.clearRect(0, 0, 1000, 100); 
         context.fillText(player1Score, 10, 50, 500, 500);
-        context.fillText(player2Score, canvasWidth - 40, 50, 500, 500);  
+        context.fillText(player2Score, canvasWidth - 40, 50, 500, 500); 
+        xLocation = canvasWidth / 2 - ballSize;
+        yLocation = canvasHeight / 2 - ballSize;
+        xSpeed = 0;
+        ySpeed = 0;
+        setTimeout(relocateBall, 1000);
     } 
 }
 
