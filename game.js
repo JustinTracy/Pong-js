@@ -3,12 +3,16 @@ let context;
 
 const canvasWidth = 800;
 const canvasHeight = 550;
-const ballSize = 25;
+const ballSize = 20;
+const initialSpeed = 10;
 
 let xLocation = canvasWidth / 2;
 let yLocation = canvasHeight / 2;
-let xSpeed = 10;
+let xSpeed = initialSpeed;
 let ySpeed = xSpeed;
+
+let player1Score = 0;
+let player2Score = 0;
 
 function InitializeGame()
 {
@@ -19,7 +23,41 @@ function InitializeGame()
     context.font = '48px arial';
     context.fillText('0', 10, 50, 500, 500);
     context.fillText('0', canvasWidth - 40, 50, 500, 500);
-    setInterval(moveBall, 1000/30);
+    setInterval(gameLoop, 1000/30);
+}
+
+function gameLoop()
+{
+    moveBall();
+    checkForPoint();
+}
+
+function checkForPoint()
+{
+    if (xLocation + ballSize >= canvasWidth)
+    {
+        player1Score++;
+        context.clearRect(xLocation, yLocation, ballSize, ballSize);
+        xLocation = canvasWidth / 2;
+        yLocation = canvasHeight / 2;
+        if (Math.floor(Math.random(2) * 2) === 1) xSpeed = initialSpeed; else xSpeed = -initialSpeed;
+        if (Math.floor(Math.random(2) * 2) === 1) ySpeed = initialSpeed; else ySpeed = -initialSpeed;
+        context.clearRect(0, 0, 1000, 100); 
+        context.fillText(player1Score, 10, 50, 500, 500);
+        context.fillText(player2Score, canvasWidth - 40, 50, 500, 500); 
+    } 
+    if (xLocation <= 0)
+    {
+        player2Score++;
+        context.clearRect(xLocation, yLocation, ballSize, ballSize);
+        xLocation = canvasWidth / 2;
+        yLocation = canvasHeight / 2;
+        if (Math.floor(Math.random(2) * 2) === 1) xSpeed = initialSpeed; else xSpeed = -initialSpeed;
+        if (Math.floor(Math.random(2) * 2) === 1) ySpeed = initialSpeed; else ySpeed = -initialSpeed;
+        context.clearRect(0, 0, 1000, 100); 
+        context.fillText(player1Score, 10, 50, 500, 500);
+        context.fillText(player2Score, canvasWidth - 40, 50, 500, 500);  
+    } 
 }
 
 function moveBall()
