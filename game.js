@@ -4,7 +4,7 @@ let context;
 const canvasWidth = 800;
 const canvasHeight = 550;
 const ballSize = 20;
-const initialSpeed = 10;
+const initialSpeed = 13;
 const playerWidth = 15;
 const playerHeight = 100;
 
@@ -13,23 +13,19 @@ let yLocation = canvasHeight / 2;
 let xSpeed = initialSpeed;
 let ySpeed = initialSpeed;
 
-let player1XLocation = ballSize + playerWidth;
-let player2XLocation = canvasWidth - ballSize - playerWidth * 2;
+let player1XLocation = ballSize + playerWidth * 2;
+let player2XLocation = canvasWidth - ballSize - playerWidth * 3;
 let player1YLocation = canvasHeight /2 - playerHeight / 2;
 let player2YLocation = canvasHeight /2 - playerHeight / 2;
-let playerSpeed = 10;
+let playerSpeed = 12;
 
 let player1Score = 0;
 let player2Score = 0;
 
-let ball;
-let player1;
-let player2;
-let score1;
-let score2;
-
 let isUpKeyPressed = false;
 let isDownKeyPressed = false;
+
+let prevPlayer2Location;
 
 function InitializeGame()
 {
@@ -38,16 +34,6 @@ function InitializeGame()
     context.fillStyle = 'white';
     context.font = '48px arial';
 
-    ball = new Path2D();
-    ball.rect(xLocation, yLocation, ballSize, ballSize);
-    player1 = new Path2D();
-    player1.rect(player1XLocation, player1YLocation, playerWidth, playerHeight);
-    player2 = new Path2D();
-    player2.rect(player2XLocation, player2YLocation, playerWidth, playerHeight);
-    context.fill(ball);
-    context.fill(player1);
-    context.fill(player2);
-
     addKeyControls();
     setInterval(gameLoop, 1000/30);
 }
@@ -55,6 +41,7 @@ function InitializeGame()
 function gameLoop()
 {
     context.clearRect(0, 0, canvasWidth, canvasHeight);
+    movePlayer2();
     movePlayer1();
     moveBall();
     checkForCollision();
@@ -64,15 +51,31 @@ function gameLoop()
 
 function checkForCollision()
 {
-    if (xLocation === player1XLocation + playerWidth)
+    if (xLocation <= player1XLocation + playerWidth)
     {
         if (yLocation >= player1YLocation && yLocation <= player1YLocation + playerHeight)
         {
             xSpeed = -xSpeed;
-            if (isUpKeyPressed) ySpeed = initialSpeed;
-            if (isDownKeyPressed) ySpeed = -initialSpeed;
+            if (isUpKeyPressed) ySpeed = initialSpeed + 8;
+            if (isDownKeyPressed) ySpeed = -initialSpeed - 8;
         }
     }
+    if (xLocation + ballSize >= player2XLocation)
+    {
+        if (yLocation >= player2YLocation && yLocation <= player2YLocation + playerHeight)
+        {
+            xSpeed = -xSpeed;
+            if (prevPlayer2Location < player2YLocation)
+            {
+                ySpeed = -initialSpeed - 6; 
+            } 
+            else 
+            {
+                ySpeed = initialSpeed + 6;
+            }
+        }
+    }
+    prevPlayer2Location = player2YLocation;
 }
 
 function drawScore()
@@ -86,6 +89,22 @@ function movePlayer1()
     if (isUpKeyPressed && player1YLocation >= 0) player1YLocation -= playerSpeed;
     if (isDownKeyPressed && player1YLocation <= canvasHeight - playerHeight) player1YLocation += playerSpeed;
     context.fillRect(player1XLocation, player1YLocation, playerWidth, playerHeight);
+}
+
+function movePlayer2()
+{
+    if (xSpeed === initialSpeed)
+    {
+        if (player2YLocation >= yLocation)
+        {
+            if (player2YLocation >= 0) player2YLocation -= playerSpeed;
+        }
+        else 
+        {
+            if (player2YLocation <= canvasHeight - playerHeight) player2YLocation += playerSpeed;
+        }
+    }
+    context.fillRect(player2XLocation, player2YLocation, playerWidth, playerHeight);
 }
 
 function addKeyControls()
@@ -112,7 +131,7 @@ function relocateBall()
 
 function checkForPoint()
 {
-    if (xLocation + ballSize >= canvasWidth)
+    if (xLocation + ballSize * 1.5 >= canvasWidth)
     {
         player1Score++;
         context.clearRect(xLocation, yLocation, ballSize, ballSize);
@@ -120,12 +139,13 @@ function checkForPoint()
         context.fillText(player1Score, 10, 50, 500, 500);
         context.fillText(player2Score, canvasWidth - 40, 50, 500, 500); 
         xLocation = canvasWidth / 2 - ballSize;
-        yLocation = canvasHeight / 2 - ballSize;
+        yLocation = canvasHeight / 2 - ballSize / 3;
         xSpeed = 0;
         ySpeed = 0;
+        player2YLocation = canvasHeight / 2 - playerHeight / 2;
         setTimeout(relocateBall, 1000);
     } 
-    if (xLocation <= 0)
+    if (xLocation <= 0 + ballSize)
     {
         player2Score++;
         context.clearRect(xLocation, yLocation, ballSize, ballSize);
@@ -133,19 +153,38 @@ function checkForPoint()
         context.fillText(player1Score, 10, 50, 500, 500);
         context.fillText(player2Score, canvasWidth - 40, 50, 500, 500); 
         xLocation = canvasWidth / 2 - ballSize;
-        yLocation = canvasHeight / 2 - ballSize;
+        yLocation = canvasHeight / 2 - ballSize / 3;
         xSpeed = 0;
         ySpeed = 0;
+        player2YLocation = canvasHeight / 2 - playerHeight / 2;
         setTimeout(relocateBall, 1000);
     } 
 }
 
 function moveBall()
 {
-    if (xLocation + ballSize >= canvasWidth) xSpeed = -xSpeed;
-    if (xLocation <= 0) xSpeed = -xSpeed;
-    if (yLocation + ballSize >= canvasHeight) ySpeed = -ySpeed;
-    if (yLocation <= 0) ySpeed = -ySpeed;
+    if (yLocation + ballSize >= canvasHeight)
+    {
+        if (ySpeed > 10)
+        {
+            ySpeed = initialSpeed - 0.5;
+        }
+        else
+        {
+            ySpeed = initialSpeed;
+        }
+    } 
+    if (yLocation <= 0)
+    {
+        if (ySpeed < -10)
+        {
+            ySpeed = -initialSpeed + 0.5;
+        }
+        else
+        {
+            ySpeed = -initialSpeed;
+        }
+    } 
     xLocation += xSpeed;
     yLocation -= ySpeed;
     
