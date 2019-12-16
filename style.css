@@ -13,3 +13,5 @@ canvas
     margin-left: calc(50% - 425px);
     margin-top: calc(50% - 650px);
 }
+
+h1 {border: 2px solid black;}
