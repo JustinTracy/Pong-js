@@ -34,6 +34,7 @@ function InitializeGame()
     context.fillStyle = 'white';
     context.font = '48px arial';
 
+    context.fillRect(xLocation, yLocation, ballSize, ballSize);
     addKeyControls();
     setInterval(gameLoop, 1000/30);
 }
