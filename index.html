@@ -3,21 +3,10 @@
     <head>
         <meta charset="utf-8">
         <title>Pong</title>
-        <style>
-            html, body
-            {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-            }
-            canvas
-            {
-                background: black; height: 100%; width: 100%;
-            }
-        </style>
+        <link rel="stylesheet" href="style.css">
         <script type="text/javascript" src="game.js"></script>
     </head>
-    <body>
-        <canvas id="canvas"></canvas>
+    <body onload="InitializeGame()">
+        <canvas id="canvas" width="800px" height="550px"></canvas>
     </body>
 </html>
