@@ -37,6 +37,7 @@ function InitializeGame()
 
     context.fillRect(xLocation, yLocation, ballSize, ballSize);
     addKeyControls();
+    addSwipeControls();
     setInterval(gameLoop, 1000/30);
 }
 
@@ -50,6 +51,38 @@ function gameLoop()
     checkForCollision();
     drawScore();
     checkForPoint();
+}
+
+function addSwipeControls()
+{
+    let initialPosition = null; 
+    
+    document.addEventListener('touchstart', e =>
+    {
+        initialPosition = e.touches[0].clientY;
+    }, false);        
+    document.addEventListener('touchmove', e =>
+    {
+        let newPosition = e.touches[0].clientY;
+        
+        if (newPosition < initialPosition) 
+        {
+            isDownKeyPressed = false;
+            isUpKeyPressed = true;
+        } 
+        else
+        { 
+            isUpKeyPressed = false;
+            isDownKeyPressed = true;
+        }     
+        xDown = null;
+        yDown = null;
+    }, false);
+    document.addEventListener('touchend', e =>
+    {
+        isDownKeyPressed = false;
+        isUpKeyPressed = false;
+    })
 }
 
 function checkForCollision()
