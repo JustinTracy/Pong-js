@@ -87,7 +87,12 @@ function checkForWin()
         {
             if (isGameOnGoing)
             { 
-                loop = setInterval(gameLoop, 1000/30)
+                context.clearRect(0, 0, canvasWidth, canvasHeight);
+                drawScore();
+                context.fillRect(player1XLocation, player1YLocation, playerWidth, playerHeight)
+                context.fillRect(player2XLocation, player2YLocation, playerWidth, playerHeight)
+                context.fillRect(xLocation, yLocation, ballSize, ballSize)
+                setTimeout(e => loop = setInterval(gameLoop, 1000/30), 1000);
                 clearInterval(replayLoop);
             }
         });
