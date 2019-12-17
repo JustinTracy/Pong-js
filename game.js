@@ -39,6 +39,7 @@ function InitializeGame()
     context.font = '48px arial';
 
     context.fillRect(xLocation, yLocation, ballSize, ballSize);
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
     context.fillText('Press any key or click to play', 150, 250, 500, 500);
     addKeyControls();
     addSwipeControls();
@@ -60,7 +61,7 @@ function gameLoop()
 
 function checkForWin()
 {
-    if (player2Score === 4 || player1Score === 4)
+    if (player2Score === 0 || player1Score === 0)
     {
         isGameOnGoing = false;
         clearInterval(loop);
