@@ -10,8 +10,17 @@ canvas
 {
     background: black;
     border: 5px solid red;
-    margin-left: calc(50% - 425px);
+    margin-left: calc(50% - 400px);
     margin-top: calc(50% - 650px);
 }
 
 h1 {border: 2px solid black;}
+
+@media screen and (max-width: 1500px)
+{
+    canvas {margin-top: 2.5%;}
+}
+@media screen and (max-width: 1300px)
+{
+    canvas {margin-top: 14%;}
+}
