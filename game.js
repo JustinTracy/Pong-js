@@ -26,6 +26,7 @@ let isUpKeyPressed = false;
 let isDownKeyPressed = false;
 
 let prevPlayer2Location;
+let isGameOnGoing = false;
 
 function InitializeGame()
 {
@@ -42,6 +43,7 @@ function InitializeGame()
 function gameLoop()
 {
     context.clearRect(0, 0, canvasWidth, canvasHeight);
+    if (!isGameOnGoing) context.fillText('Press any key or click to play', 150, 250, 500, 500);
     movePlayer2();
     movePlayer1();
     moveBall();
@@ -81,12 +83,14 @@ function checkForCollision()
 
 function drawScore()
 {
+    if (!isGameOnGoing) return;
     context.fillText(player1Score, 10, 50, 500, 500);
     context.fillText(player2Score, canvasWidth - 40, 50, 500, 500);
 }
 
 function movePlayer1()
 {
+    if (!isGameOnGoing) return;
     if (isUpKeyPressed && player1YLocation >= 0) player1YLocation -= playerSpeed;
     if (isDownKeyPressed && player1YLocation <= canvasHeight - playerHeight) player1YLocation += playerSpeed;
     context.fillRect(player1XLocation, player1YLocation, playerWidth, playerHeight);
@@ -94,6 +98,7 @@ function movePlayer1()
 
 function movePlayer2()
 {
+    if (!isGameOnGoing) return;
     if (xSpeed === initialSpeed)
     {
         if (player2YLocation >= yLocation)
@@ -120,6 +125,14 @@ function addKeyControls()
         if (e.code === 'ArrowUp') isUpKeyPressed = false;
         if (e.code === 'ArrowDown') isDownKeyPressed = false;
     });
+    document.addEventListener('keydown', e =>
+    {
+        if (!isGameOnGoing) isGameOnGoing = true;
+    });
+    document.addEventListener('click', e =>
+    {
+        if (!isGameOnGoing) isGameOnGoing = true;
+    })
 }
 
 function relocateBall()
@@ -164,6 +177,7 @@ function checkForPoint()
 
 function moveBall()
 {
+    if (!isGameOnGoing) return;
     if (yLocation + ballSize >= canvasHeight)
     {
         if (ySpeed > 10)
