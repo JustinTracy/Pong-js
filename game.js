@@ -19,14 +19,17 @@ let player1YLocation = canvasHeight /2 - playerHeight / 2;
 let player2YLocation = canvasHeight /2 - playerHeight / 2;
 let playerSpeed = 12;
 
-let player1Score = 0;
-let player2Score = 0;
+let player1Score = 3;
+let player2Score = 3;
 
 let isUpKeyPressed = false;
 let isDownKeyPressed = false;
 
 let prevPlayer2Location;
 let isGameOnGoing = false;
+
+let loop;
+let replayLoop;
 
 function InitializeGame()
 {
@@ -36,21 +39,59 @@ function InitializeGame()
     context.font = '48px arial';
 
     context.fillRect(xLocation, yLocation, ballSize, ballSize);
+    context.fillText('Press any key or click to play', 150, 250, 500, 500);
     addKeyControls();
     addSwipeControls();
-    setInterval(gameLoop, 1000/30);
+    loop = setInterval(gameLoop, 1000/30);
 }
 
 function gameLoop()
 {
+    if (!isGameOnGoing) return;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
-    if (!isGameOnGoing) context.fillText('Press any key or click to play', 150, 250, 500, 500);
     movePlayer2();
     movePlayer1();
     moveBall();
     checkForCollision();
     drawScore();
     checkForPoint();
+    checkForWin();
+}
+
+function checkForWin()
+{
+    if (player2Score === 4 || player1Score === 4)
+    {
+        isGameOnGoing = false;
+        clearInterval(loop);
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+        context.fillText('Press any key or click to play again', 150, 325, 500, 500);
+        if (player2Score === 0)
+        {
+            context.fillText('You Win!', 300, 250, 500, 500);
+        }
+        else if (player1Score === 0)
+        {
+            context.fillText('You Lose', 300, 250, 500, 500);
+        }
+        xLocation = canvasWidth / 2;
+        yLocation = canvasHeight / 2;
+        player1XLocation = ballSize + playerWidth * 2;
+        player2XLocation = canvasWidth - ballSize - playerWidth * 3;
+        player1YLocation = canvasHeight /2 - playerHeight / 2;
+        player2YLocation = canvasHeight /2 - playerHeight / 2;
+        playerSpeed = 12;
+        player1Score = 3;
+        player2Score = 3;
+        replayLoop = setInterval(e => 
+        {
+            if (isGameOnGoing)
+            { 
+                loop = setInterval(gameLoop, 1000/30)
+                clearInterval(replayLoop);
+            }
+        });
+    }
 }
 
 function addSwipeControls()
@@ -180,7 +221,7 @@ function checkForPoint()
 {
     if (xLocation + ballSize * 1.5 >= canvasWidth)
     {
-        player1Score++;
+        player2Score--;
         context.clearRect(xLocation, yLocation, ballSize, ballSize);
         context.clearRect(0, 0, 1000, 100); 
         context.fillText(player1Score, 10, 50, 500, 500);
@@ -194,7 +235,7 @@ function checkForPoint()
     } 
     if (xLocation <= 0 + ballSize)
     {
-        player2Score++;
+        player1Score--;
         context.clearRect(xLocation, yLocation, ballSize, ballSize);
         context.clearRect(0, 0, 1000, 100); 
         context.fillText(player1Score, 10, 50, 500, 500);
