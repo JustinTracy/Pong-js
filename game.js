@@ -4,7 +4,7 @@ let context;
 const canvasWidth = 800;
 const canvasHeight = 550;
 const ballSize = 20;
-const initialSpeed = 13;
+const initialSpeed = 15;
 const playerWidth = 15;
 const playerHeight = 100;
 
@@ -17,7 +17,7 @@ let player1XLocation = ballSize + playerWidth * 2;
 let player2XLocation = canvasWidth - ballSize - playerWidth * 3;
 let player1YLocation = canvasHeight /2 - playerHeight / 2;
 let player2YLocation = canvasHeight /2 - playerHeight / 2;
-let playerSpeed = 12;
+const playerSpeed = 17;
 
 let player1Score = 3;
 let player2Score = 3;
@@ -81,7 +81,6 @@ function checkForWin()
         player2XLocation = canvasWidth - ballSize - playerWidth * 3;
         player1YLocation = canvasHeight /2 - playerHeight / 2;
         player2YLocation = canvasHeight /2 - playerHeight / 2;
-        playerSpeed = 12;
         player1Score = 3;
         player2Score = 3;
         replayLoop = setInterval(e => 
@@ -210,7 +209,7 @@ function addKeyControls()
     })
 }
 
-function relocateBall()
+function relocateBall()     
 {
     xLocation = canvasWidth / 2;
     yLocation = canvasHeight / 2;
